@@ -233,7 +233,7 @@ const HeroSection = () => {
                 <span className="inline-block transition-transform group-hover:translate-x-1 duration-300">→</span>
               </span>
             </a>
-            <a href="/resume.pdf" target="_blank" rel="noopener noreferrer"
+            <a href={`${import.meta.env.BASE_URL}resume.pdf`} target="_blank" rel="noopener noreferrer"
               className="hero-btn-secondary inline-flex items-center justify-center px-8 py-3.5 text-xs font-bold uppercase tracking-widest rounded-none">
               Resume ↗
             </a>

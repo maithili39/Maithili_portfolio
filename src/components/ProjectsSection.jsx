@@ -126,7 +126,7 @@ const ProjectCard = ({ project, index, total }) => {
         {project.image ? (
           <div className="group/image relative w-full flex-1 min-h-0 overflow-hidden rounded-[16px] md:rounded-[24px] border-4 border-black bg-neutral-900">
             <img
-              src={project.image}
+              src={`${import.meta.env.BASE_URL}${project.image.startsWith('/') ? project.image.slice(1) : project.image}`}
               alt={project.title}
               className="w-full h-full object-cover object-top block transition-transform duration-500 group-hover/image:scale-105"
             />
