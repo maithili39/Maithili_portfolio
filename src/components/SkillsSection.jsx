@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FiLayout, FiServer, FiDatabase, FiCpu, FiZap, FiPenTool } from 'react-icons/fi';
 import useVisible from '../hooks/useVisible';
 
@@ -43,42 +43,79 @@ const skillCategories = [
 
 const SkillsSection = () => {
   const [ref, visible] = useVisible();
+  const [activeTab, setActiveTab] = useState(0);
 
   return (
     <section id="skills" ref={ref} className="py-14 md:py-20 bg-[#FAF8F5] text-black px-6 md:px-12 lg:px-24">
-      <div className="max-w-7xl mx-auto flex flex-col items-center">
+      <div className="max-w-5xl mx-auto flex flex-col items-center">
 
-        <div className={`w-full text-center mb-8 ${visible ? 'animate-fade-up' : 'opacity-0'}`}>
+        <div className={`w-full text-center mb-10 md:mb-14 ${visible ? 'animate-fade-up' : 'opacity-0'}`}>
           <h2 className="font-sans-display inline-block text-4xl md:text-5xl lg:text-6xl font-black uppercase tracking-tighter leading-none text-black [text-shadow:4px_4px_0_#F77F00]">
             Skills
           </h2>
         </div>
 
-        <div className="w-full max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10 md:gap-y-14">
-          {skillCategories.map((category, index) => (
-            <div
-              key={index}
-              className={`flex flex-col w-full ${visible ? `animate-fade-up delay-${index + 1}` : 'opacity-0'}`}
-            >
-              <div className="flex items-center justify-center gap-3 mb-4">
-                <span className="text-black">{category.icon}</span>
-                <h3 className="font-sans-display text-xl md:text-2xl font-black text-black tracking-wide uppercase">
-                  {category.title}
-                </h3>
-              </div>
-
-              <div className="flex flex-wrap justify-center gap-2 md:gap-3">
-                {category.skills.map((skill, i) => (
-                  <span
-                    key={i}
-                    className={`font-sans-display flex-shrink-0 px-2 py-1 md:px-3 md:py-1.5 text-[10px] md:text-xs font-black border-2 border-black shadow-[2px_2px_0_0_#000] hover:-translate-y-0.5 hover:shadow-[4px_4px_0_0_#000] transition-all duration-200 ${category.tagColor}`}
-                  >
-                    {skill}
+        {/* 2-Column Section */}
+        <div className={`w-full grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-start ${visible ? 'animate-fade-up delay-1' : 'opacity-0'}`}>
+          
+          {/* Left Column: Vertical Tabs */}
+          <div className="md:col-span-4 flex flex-row md:flex-col overflow-x-auto md:overflow-x-visible gap-2 pb-3 md:pb-0 border-b md:border-b-0 border-neutral-200 scrollbar-none">
+            {skillCategories.map((category, index) => {
+              const isActive = activeTab === index;
+              return (
+                <button
+                  key={index}
+                  onClick={() => setActiveTab(index)}
+                  className={`font-sans-display flex items-center gap-3 px-5 py-3.5 border-2 border-black font-black uppercase tracking-widest text-xs transition-all duration-200 text-left shrink-0 md:shrink-1 select-none cursor-pointer ${
+                    isActive
+                      ? 'bg-black text-white shadow-[3px_3px_0_0_#F77F00] translate-x-0.5'
+                      : 'bg-white text-black hover:bg-neutral-50 shadow-[3px_3px_0_0_#000]'
+                  }`}
+                >
+                  <span className={isActive ? 'text-[#F77F00]' : 'text-neutral-500'}>
+                    {category.icon}
                   </span>
-                ))}
-              </div>
+                  <span>{category.title}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Right Column: Tab Content (Table layout) */}
+          <div className="md:col-span-8 bg-white border-4 border-black p-6 md:p-8 shadow-[6px_6px_0_0_#000] min-h-[350px] w-full">
+            {/* Tab Header */}
+            <div className="flex items-center gap-3.5 pb-4 border-b-2 border-black mb-6">
+              <span className="text-[#F77F00]">{skillCategories[activeTab].icon}</span>
+              <h3 className="font-sans-display text-xl md:text-2xl font-black text-black tracking-wide uppercase">
+                {skillCategories[activeTab].title}
+              </h3>
             </div>
-          ))}
+
+            {/* Invisible Border Table */}
+            <div className="flex flex-col">
+              {skillCategories[activeTab].skills.map((skill, i) => (
+                <div
+                  key={i}
+                  className="flex items-center justify-between py-4 border-b border-neutral-100 last:border-0 group hover:bg-neutral-50/50 px-2 transition-colors duration-200"
+                >
+                  <div className="flex items-center gap-3">
+                    {/* Small Dot Bullet */}
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#F77F00] shrink-0" />
+                    <span className="font-sans-display font-black text-sm md:text-base text-black tracking-wide">
+                      {skill}
+                    </span>
+                  </div>
+                  
+                  {/* Subtle clean badge for visual aesthetics */}
+                  <span className={`font-mono-display text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 border border-black/10 select-none ${skillCategories[activeTab].tagColor.split(' ')[0]} bg-opacity-10 text-neutral-600`}>
+                    Skill
+                  </span>
+                </div>
+              ))}
+            </div>
+
+          </div>
+
         </div>
 
       </div>

@@ -40,7 +40,7 @@ const contactLinks = [
 
 const inputClass = `
   w-full bg-white/5 border-2 border-white/10 text-white placeholder-neutral-500
-  font-sans-display text-sm font-medium px-4 py-3
+  font-sans-display text-base font-medium px-4 py-3
   focus:outline-none focus:border-[#F77F00] focus:bg-white/8
   transition-all duration-200
 `.trim();
@@ -95,7 +95,7 @@ const ContactSection = () => {
 
             {/* Left — contact cards */}
             <div className={`flex flex-col gap-3 ${visible ? 'animate-fade-up delay-1' : 'opacity-0'}`}>
-              <p className="font-mono-display text-[10px] text-neutral-500 uppercase tracking-[0.25em] mb-2">Find me on</p>
+              <p className="font-mono-display text-xs text-neutral-500 uppercase tracking-[0.25em] mb-2">Find me on</p>
               {contactLinks.map((link, i) => (
                 <a
                   key={link.id}
@@ -111,8 +111,8 @@ const ContactSection = () => {
                     {link.icon}
                   </div>
                   <div className="flex flex-col min-w-0">
-                    <span className="font-mono-display text-[9px] text-neutral-500 uppercase tracking-widest">{link.title}</span>
-                    <span className="font-sans-display font-bold text-white text-sm truncate">{link.value}</span>
+                    <span className="font-mono-display text-xs text-neutral-500 uppercase tracking-widest">{link.title}</span>
+                    <span className="font-sans-display font-bold text-white text-base truncate">{link.value}</span>
                   </div>
                   <FiArrowUpRight className="ml-auto w-4 h-4 text-neutral-600 group-hover:text-[#F77F00] group-hover:rotate-45 shrink-0 transition-all duration-200" />
                 </a>
@@ -121,7 +121,7 @@ const ContactSection = () => {
 
             {/* Right — contact form */}
             <div className={`${visible ? 'animate-fade-up delay-2' : 'opacity-0'}`}>
-              <p className="font-mono-display text-[10px] text-neutral-500 uppercase tracking-[0.25em] mb-5">Send a message</p>
+              <p className="font-mono-display text-xs text-neutral-500 uppercase tracking-[0.25em] mb-5">Send a message</p>
 
               {status === 'success' ? (
                 <div className="border-2 border-[#F77F00] bg-[#F77F00]/10 p-8 text-center">
@@ -135,7 +135,7 @@ const ContactSection = () => {
                 <form onSubmit={handleSubmit} className="flex flex-col gap-3">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div className="flex flex-col gap-1.5">
-                      <label className="font-mono-display text-[9px] text-neutral-500 uppercase tracking-widest">Name</label>
+                      <label className="font-mono-display text-xs text-neutral-500 uppercase tracking-widest">Name</label>
                       <input
                         type="text"
                         name="name"
@@ -147,7 +147,7 @@ const ContactSection = () => {
                       />
                     </div>
                     <div className="flex flex-col gap-1.5">
-                      <label className="font-mono-display text-[9px] text-neutral-500 uppercase tracking-widest">Email</label>
+                      <label className="font-mono-display text-xs text-neutral-500 uppercase tracking-widest">Email</label>
                       <input
                         type="email"
                         name="email"
@@ -161,7 +161,7 @@ const ContactSection = () => {
                   </div>
 
                   <div className="flex flex-col gap-1.5">
-                    <label className="font-mono-display text-[9px] text-neutral-500 uppercase tracking-widest">Message</label>
+                    <label className="font-mono-display text-xs text-neutral-500 uppercase tracking-widest">Message</label>
                     <textarea
                       name="message"
                       value={form.message}
@@ -196,8 +196,8 @@ const ContactSection = () => {
 
       <footer className="bg-black border-t border-white/8 py-5 px-6 md:px-12 lg:px-24">
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
-          <p className="font-mono-display text-[10px] text-neutral-600 uppercase tracking-widest">© 2026 Maithili Dorkhande</p>
-          <p className="font-mono-display text-[10px] text-neutral-600 uppercase tracking-widest">Built in Nagpur</p>
+          <p className="font-mono-display text-xs text-neutral-600 uppercase tracking-widest">© 2026 Maithili Dorkhande</p>
+          <p className="font-mono-display text-xs text-neutral-600 uppercase tracking-widest">Built in Nagpur</p>
         </div>
       </footer>
     </>

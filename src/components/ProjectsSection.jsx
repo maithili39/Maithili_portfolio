@@ -114,7 +114,7 @@ const ProjectCard = ({ project, index, total }) => {
           <div className="w-full overflow-hidden flex items-center min-h-[44px] flex-shrink-0">
             <div className="flex items-center w-max animate-marquee hover:[animation-play-state:paused] gap-2 px-2">
               {[...project.techStack, ...project.techStack, ...project.techStack, ...project.techStack].map((tech, i) => (
-                <span key={i} className="font-mono-display shrink-0 inline-flex items-center px-3 py-1.5 bg-[#FCBF49] border-2 border-black text-black text-[10px] tracking-widest uppercase font-bold shadow-[3px_3px_0_0_#000] leading-none">
+                <span key={i} className="font-mono-display shrink-0 inline-flex items-center px-3 py-1.5 bg-[#FCBF49] border-2 border-black text-black text-xs tracking-widest uppercase font-bold shadow-[3px_3px_0_0_#000] leading-none">
                   {tech}
                 </span>
               ))}
