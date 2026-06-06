@@ -7,9 +7,10 @@
   --font-mono: 'JetBrains Mono', monospace;
 
   /* Globally scale text sizes to make paragraphs/labels larger and more readable */
-  --text-xs: 0.8125rem;   /* 13px (from 12px) */
-  --text-sm: 0.9375rem;   /* 15px (from 14px) */
-  --text-base: 1.0625rem; /* 17px (from 16px) */
+  --text-xs: 15px;
+  --text-sm: 17px;
+  --text-base: 19px;
+  --text-lg: 20px;
 }
 
 body {
