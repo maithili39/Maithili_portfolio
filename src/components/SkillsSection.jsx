@@ -80,18 +80,18 @@ const SkillsSection = () => {
           </h2>
         </div>
 
-        {/* 2-Column Section */}
-        <div className="w-full grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-start">
+        {/* 2-Column Section with height stretch to keep columns aligned */}
+        <div className={`w-full grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-stretch ${visible ? 'animate-fade-up delay-1' : 'opacity-0'}`}>
           
           {/* Left Column: Vertical Tabs */}
-          <div className={`md:col-span-4 flex flex-row md:flex-col overflow-x-auto md:overflow-x-visible gap-3 pb-3 md:pb-0 scrollbar-none w-full ${visible ? 'animate-fade-up delay-1' : 'opacity-0'}`}>
+          <div className="md:col-span-4 flex flex-row md:flex-col overflow-x-auto md:overflow-x-visible gap-3 pb-3 md:pb-0 scrollbar-none w-full h-full justify-between">
             {skillCategories.map((category, index) => {
               const isActive = activeTab === index;
               return (
                 <button
                   key={index}
                   onClick={() => setActiveTab(index)}
-                  className={`font-sans-display flex items-center justify-between px-5 py-4 border-2 border-black font-black uppercase tracking-widest text-xs transition-all duration-300 text-left shrink-0 md:shrink-1 select-none cursor-pointer w-full group ${
+                  className={`font-sans-display flex items-center justify-between px-5 py-4 border-2 border-black font-black uppercase tracking-widest text-xs transition-all duration-300 text-left shrink-0 md:shrink-1 select-none cursor-pointer w-full group flex-1 ${
                     isActive
                       ? 'bg-black text-white shadow-[4px_4px_0_0_#F77F00] -translate-y-0.5'
                       : 'bg-white text-black hover:bg-neutral-50 shadow-[3px_3px_0_0_#000] hover:-translate-y-0.5 hover:shadow-[4px_4px_0_0_#000]'
@@ -117,50 +117,49 @@ const SkillsSection = () => {
             })}
           </div>
 
-          {/* Right Column: Tab Content (Table layout with Framer Motion) */}
-          <div className={`md:col-span-8 bg-white border-4 border-black p-6 md:p-8 shadow-[6px_6px_0_0_#000] min-h-[360px] w-full relative overflow-hidden ${visible ? 'animate-fade-up delay-2' : 'opacity-0'}`}>
-            
-            {/* Tab Header */}
-            <div className="flex items-center gap-3.5 pb-4 border-b-2 border-black mb-6">
-              <span className="text-[#F77F00]">{skillCategories[activeTab].icon}</span>
-              <h3 className="font-sans-display text-xl md:text-2xl font-black text-black tracking-wide uppercase">
-                {skillCategories[activeTab].title}
-              </h3>
-            </div>
+          {/* Right Column: Tab Content (Table layout matching left column height) */}
+          <div className="md:col-span-8 w-full h-full">
+            <div className="bg-white border-4 border-black p-6 md:p-8 shadow-[6px_6px_0_0_#000] h-full w-full relative overflow-hidden flex flex-col justify-between">
+              
+              <div>
+                {/* Tab Header */}
+                <div className="flex items-center gap-3.5 pb-4 border-b-2 border-black mb-6">
+                  <span className="text-[#F77F00]">{skillCategories[activeTab].icon}</span>
+                  <h3 className="font-sans-display text-xl md:text-2xl font-black text-black tracking-wide uppercase">
+                    {skillCategories[activeTab].title}
+                  </h3>
+                </div>
 
-            {/* Staggered Animated List */}
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeTab}
-                variants={listVariants}
-                initial="hidden"
-                animate="visible"
-                exit="hidden"
-                className="flex flex-col"
-              >
-                {skillCategories[activeTab].skills.map((skill, i) => (
+                {/* Invisible Border Table */}
+                <AnimatePresence mode="wait">
                   <motion.div
-                    key={i}
-                    variants={itemVariants}
-                    className="flex items-center justify-between py-4 border-b border-neutral-100 last:border-0 group hover:bg-[#F77F00]/5 px-3 -mx-3 transition-colors duration-200"
+                    key={activeTab}
+                    variants={listVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="hidden"
+                    className="flex flex-col"
                   >
-                    <div className="flex items-center gap-3.5">
-                      {/* Animating orange bullet point */}
-                      <span className="w-2.5 h-2.5 rounded-full bg-[#F77F00] group-hover:scale-125 transition-transform duration-300 shadow-[0_0_6px_rgba(247,127,0,0.4)]" />
-                      <span className="font-sans-display font-black text-sm md:text-base text-black tracking-wide group-hover:translate-x-1.5 transition-transform duration-300">
-                        {skill}
-                      </span>
-                    </div>
-                    
-                    {/* Interactive category tag badge */}
-                    <span className={`font-mono-display text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 border border-black/10 select-none ${skillCategories[activeTab].tagColor.split(' ')[0]} bg-opacity-10 text-neutral-600 transition-all duration-300 group-hover:border-black/30 group-hover:shadow-[2px_2px_0_0_rgba(0,0,0,0.1)]`}>
-                      Skill
-                    </span>
+                    {skillCategories[activeTab].skills.map((skill, i) => (
+                      <motion.div
+                        key={i}
+                        variants={itemVariants}
+                        className="flex items-center py-4 border-b border-neutral-100 last:border-0 group hover:bg-[#F77F00]/5 px-3 -mx-3 transition-colors duration-200"
+                      >
+                        <div className="flex items-center gap-3.5">
+                          {/* Animating orange bullet point */}
+                          <span className="w-2.5 h-2.5 rounded-full bg-[#F77F00] group-hover:scale-125 transition-transform duration-300 shadow-[0_0_6px_rgba(247,127,0,0.4)]" />
+                          <span className="font-sans-display font-black text-sm md:text-base text-black tracking-wide group-hover:translate-x-1.5 transition-transform duration-300">
+                            {skill}
+                          </span>
+                        </div>
+                      </motion.div>
+                    ))}
                   </motion.div>
-                ))}
-              </motion.div>
-            </AnimatePresence>
+                </AnimatePresence>
+              </div>
 
+            </div>
           </div>
 
         </div>
