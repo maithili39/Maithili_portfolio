@@ -8,11 +8,11 @@ const projects = [
     id: '01',
     category: 'AI / WEB',
     title: 'SkinGuard',
-    description: 'An intelligent skincare analysis platform that scans product labels and ingredients to flag potential skin concerns, track routines, and provide personalized skin profiles.',
-    techStack: ['Python', 'FastAPI', 'PostgreSQL', 'pgvector', 'Redis', 'Sentence-transformers', 'Gemini AI', 'Tesseract OCR', 'Next.js', 'React', 'Tailwind CSS', 'Docker'],
-    liveUrl: 'https://skin-guard-jet.vercel.app/',
+    description: 'An intelligent skincare analysis platform where users scan product labels via camera or barcode. It extracts ingredients with OCR, analyzes them using LLM and semantic embeddings, detects routine conflicts, scores safety, and delivers personalized recommendations based on skin profiles.',
+    techStack: ['Python', 'FastAPI', 'PostgreSQL', 'pgvector', 'Redis', 'Sentence-Transformers', 'Groq LLM', 'Tesseract OCR', 'Google Cloud Vision', 'Next.js', 'TypeScript', 'React Native', 'Expo', 'TailwindCSS', 'NativeWind', 'Docker'],
+    liveUrl: 'https://skin-guard-nu.vercel.app/',
     codeUrl: 'https://github.com/maithili39/SkinGuard',
-    image: '/images/screenguard.png',
+    image: '/images/sguard.png',
   },
   {
     id: '02',
@@ -28,24 +28,18 @@ const projects = [
     id: '03',
     category: 'AI / WEB',
     title: 'CivicSense',
-    description: 'An AI-powered grievance portal designed to streamline civic issue reporting and resolution with intelligent categorization and automated routing.',
-    techStack: ['React', 'Vite', 'Tailwind CSS', 'Node.js', 'Express', 'MongoDB', 'Socket.IO', 'FastAPI', 'PyTorch', 'HuggingFace', 'DistilBERT', 'FAISS', 'Flan-T5-base', 'Google Maps API'],
-    liveUrl: 'https://amravati-hackgen-x.vercel.app/',
+    description: 'An enterprise-grade public grievance redressal platform that leverages Zero-Shot AI to instantly categorize, prioritize, and route citizen complaints. Eliminates manual triage by extracting sentiment and risk level from every complaint, with five real-time dashboards via Socket.IO and automated SLA alerts that escalate overdue tickets to higher authorities.',
+    techStack: ['React', 'Vite', 'CSS', 'Node.js', 'Express', 'Socket.IO', 'MongoDB Atlas', 'Python', 'FastAPI', 'PyTorch', 'HuggingFace', 'DistilBERT', 'Vercel', 'Render'],
+    liveUrl: 'https://civicsense-bice.vercel.app/',
     codeUrl: 'https://github.com/maithili39/HackgenX',
-    image: '/images/civicsense.png',
-  },
-  {
-    id: '04',
-    category: 'AI / DATA',
-    title: 'AI Energy Demand Forecasting & Efficiency Monitoring',
-    description: 'Production-grade AI system for building energy analytics, forecasting, anomaly detection, and real-time simulation.',
-    techStack: ['Python', 'FastAPI', 'Streamlit', 'LightGBM', 'XGBoost', 'CatBoost', 'Random Forest', 'Optuna', 'SHAP', 'Scikit-learn', 'Plotly', 'Pandas'],
-    codeUrl: 'https://github.com/maithili39/AI-Energy-Demand-Forecasting-Efficiency-Monitoring-System',
-    image: '/images/energy.png',
+    image: '/images/civicsense1.png',
   },
 ];
 
-const ProjectCard = ({ project, index, total }) => {
+const CARD_HEIGHT = '92vh';
+const TOP_OFFSET = 64;
+
+const ProjectCard = ({ project, index }) => {
   const cardRef = useRef(null);
 
   const { scrollYProgress } = useScroll({
@@ -53,38 +47,35 @@ const ProjectCard = ({ project, index, total }) => {
     offset: ['start end', 'start start'],
   });
 
-  const targetScale = 0.92;
-  const scale = useTransform(
-    scrollYProgress,
-    [0, 0.8],
-    [1, 0.92]
-  );
-  return (
+  const scale = useTransform(scrollYProgress, [0, 0.85], [1, 0.93]);
 
-    // This is the sticky viewport-height shell — exactly like Harsh's approach.
-    // h-[100vh] pins it at a fixed height so the next card can scroll over it.
+  return (
     <div
       ref={cardRef}
-      className="sticky w-full h-[85vh]"
-      style={{ top: '80px' }}
+      className="sticky w-full"
+      style={{ top: `${TOP_OFFSET + index * 16}px`, height: CARD_HEIGHT }}
     >
       <motion.article
         style={{ scale }}
-        className="origin-top w-full h-full flex flex-col gap-5 md:gap-7 rounded-[32px] md:rounded-[40px] border-4 border-black bg-white shadow-[6px_6px_0_0_#F77F00] p-5 sm:p-6 md:p-8"
+        className="origin-top w-full h-full flex flex-col gap-4 md:gap-5 rounded-[32px] md:rounded-[40px] border-4 border-black bg-white shadow-[6px_6px_0_0_#F77F00] p-5 sm:p-6 md:p-8"
       >
         {/* Top row */}
         <div className="flex flex-col sm:flex-row items-start sm:justify-between gap-4 flex-shrink-0">
           <div className="flex flex-row items-start gap-4 md:gap-8 min-w-0 flex-1">
-            <div className="shrink-0 font-sans-display font-black text-black/10 leading-none select-none"
-              style={{ fontSize: 'clamp(3rem, 8vw, 100px)' }}>
+            <div
+              className="shrink-0 font-sans-display font-black text-black/10 leading-none select-none"
+              style={{ fontSize: 'clamp(3rem, 8vw, 100px)' }}
+            >
               {project.id}
             </div>
             <div className="flex flex-col gap-1.5 pt-1 min-w-0 flex-1">
               <span className="font-mono-display inline-block bg-[#FCBF49] border-2 border-black px-2 py-0.5 font-bold uppercase tracking-widest text-black text-[10px] shadow-[2px_2px_0_0_#000] w-fit">
                 {project.category}
               </span>
-              <h3 className="font-sans-display font-black uppercase text-black leading-tight"
-                style={{ fontSize: 'clamp(1.1rem, 2.5vw, 2rem)' }}>
+              <h3
+                className="font-sans-display font-black uppercase text-black leading-tight"
+                style={{ fontSize: 'clamp(1.1rem, 2.5vw, 2rem)' }}
+              >
                 {project.title}
               </h3>
               <p className="font-sans-display text-neutral-500 text-sm leading-relaxed font-medium max-w-xl">
@@ -95,14 +86,22 @@ const ProjectCard = ({ project, index, total }) => {
 
           <div className="shrink-0 flex flex-row sm:flex-col gap-3 w-full sm:w-auto pt-1">
             {project.liveUrl && (
-              <a href={project.liveUrl} target="_blank" rel="noopener noreferrer"
-                className="font-sans-display inline-flex items-center justify-center border-4 border-black px-5 py-2.5 text-xs font-black uppercase tracking-widest text-black bg-white shadow-[4px_4px_0_0_#F77F00] hover:shadow-[6px_6px_0_0_#F77F00] hover:-translate-y-0.5 transition-all duration-200 group flex-1 sm:flex-none">
+              <a
+                href={project.liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-sans-display inline-flex items-center justify-center border-4 border-black px-5 py-2.5 text-xs font-black uppercase tracking-widest text-black bg-white shadow-[4px_4px_0_0_#F77F00] hover:shadow-[6px_6px_0_0_#F77F00] hover:-translate-y-0.5 transition-all duration-200 group flex-1 sm:flex-none"
+              >
                 Live <FiArrowUpRight className="ml-1.5 w-4 h-4 group-hover:rotate-45 transition-transform" />
               </a>
             )}
             {project.codeUrl && (
-              <a href={project.codeUrl} target="_blank" rel="noopener noreferrer"
-                className="font-sans-display inline-flex items-center justify-center border-4 border-black px-5 py-2.5 text-xs font-black uppercase tracking-widest text-black bg-white shadow-[4px_4px_0_0_#000] hover:shadow-[6px_6px_0_0_#F77F00] hover:-translate-y-0.5 transition-all duration-200 group flex-1 sm:flex-none">
+              <a
+                href={project.codeUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-sans-display inline-flex items-center justify-center border-4 border-black px-5 py-2.5 text-xs font-black uppercase tracking-widest text-black bg-white shadow-[4px_4px_0_0_#000] hover:shadow-[6px_6px_0_0_#F77F00] hover:-translate-y-0.5 transition-all duration-200 group flex-1 sm:flex-none"
+              >
                 Code <FiArrowUpRight className="ml-1.5 w-4 h-4 group-hover:rotate-45 transition-transform" />
               </a>
             )}
@@ -111,10 +110,13 @@ const ProjectCard = ({ project, index, total }) => {
 
         {/* Tech marquee */}
         {project.techStack && (
-          <div className="w-full overflow-hidden flex items-center min-h-[44px] flex-shrink-0">
+          <div className="w-full overflow-hidden flex items-center min-h-[40px] flex-shrink-0">
             <div className="flex items-center w-max animate-marquee hover:[animation-play-state:paused] gap-2 px-2">
               {[...project.techStack, ...project.techStack, ...project.techStack, ...project.techStack].map((tech, i) => (
-                <span key={i} className="font-mono-display shrink-0 inline-flex items-center px-3 py-1.5 bg-[#FCBF49] border-2 border-black text-black text-xs tracking-widest uppercase font-bold shadow-[3px_3px_0_0_#000] leading-none">
+                <span
+                  key={i}
+                  className="font-mono-display shrink-0 inline-flex items-center px-3 py-1.5 bg-[#FCBF49] border-2 border-black text-black text-xs tracking-widest uppercase font-bold shadow-[3px_3px_0_0_#000] leading-none"
+                >
                   {tech}
                 </span>
               ))}
@@ -122,13 +124,13 @@ const ProjectCard = ({ project, index, total }) => {
           </div>
         )}
 
-        {/* Image — fills remaining space, object-cover so it fills the card like Harsh's */}
+        {/* Image — flex-1 so it fills remaining card height; object-contain shows full screenshot */}
         {project.image ? (
-          <div className="group/image relative w-full flex-1 min-h-0 overflow-hidden rounded-[16px] md:rounded-[24px] border-4 border-black bg-neutral-900">
+          <div className="group/image w-full flex-1 min-h-0 flex items-start justify-center overflow-hidden">
             <img
               src={`${import.meta.env.BASE_URL}${project.image.startsWith('/') ? project.image.slice(1) : project.image}`}
               alt={project.title}
-              className="w-full h-full object-cover object-top block transition-transform duration-500 group-hover/image:scale-105"
+              className="max-w-full max-h-full w-auto h-auto block border-4 border-black rounded-[16px] md:rounded-[24px] transition-transform duration-500 group-hover/image:scale-105"
             />
           </div>
         ) : (
@@ -143,7 +145,6 @@ const ProjectCard = ({ project, index, total }) => {
 
 const ProjectsSection = () => {
   const [ref, visible] = useVisible();
-  const containerRef = useRef(null);
 
   return (
     <section id="projects" ref={ref} className="bg-[#FAF8F5] px-4 sm:px-6 md:px-10 py-14 md:py-20 text-black">
@@ -154,34 +155,23 @@ const ProjectsSection = () => {
         </h2>
       </div>
 
+      {/* Scroll budget: each card needs ~100vh of scroll space to be fully seen before the next takes over */}
       <div
-        ref={containerRef}
         className="mx-auto max-w-5xl relative"
-        style={{
-          height: `${projects.length * 90}vh`,
-        }}
+        style={{ height: `${projects.length * 100}vh` }}
       >
         {projects.map((project, index) => (
-          <div
-            key={project.id}
-            className="sticky"
-            style={{
-              top: `${80 + index * 20}px`,
-              zIndex: index + 1,
-            }}
-          >
-            <ProjectCard
-              project={project}
-              index={index}
-              total={projects.length}
-            />
-          </div>
+          <ProjectCard key={project.id} project={project} index={index} total={projects.length} />
         ))}
       </div>
 
       <div className="flex justify-center mt-16 relative z-10">
-        <a href="https://github.com/maithili39" target="_blank" rel="noopener noreferrer"
-          className="font-sans-display inline-flex items-center justify-center border-4 border-black px-10 py-4 text-sm font-black uppercase tracking-widest text-black bg-white shadow-[4px_4px_0_0_#F77F00] hover:shadow-[6px_6px_0_0_#F77F00] hover:-translate-y-1 transition-all duration-300 group">
+        <a
+          href="https://github.com/maithili39"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-sans-display inline-flex items-center justify-center border-4 border-black px-10 py-4 text-sm font-black uppercase tracking-widest text-black bg-white shadow-[4px_4px_0_0_#F77F00] hover:shadow-[6px_6px_0_0_#F77F00] hover:-translate-y-1 transition-all duration-300 group"
+        >
           View More Projects
           <FiArrowUpRight className="ml-2 w-5 h-5 group-hover:rotate-45 transition-transform" />
         </a>
