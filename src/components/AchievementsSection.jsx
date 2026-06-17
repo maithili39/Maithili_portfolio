@@ -5,7 +5,7 @@ const achievements = [
   {
     id: 1,
     number: '01',
-    title: 'Top 10 Finalist',
+    title: 'Top 15 Finalist',
     subtitle: 'GraphRAG Inference Hackathon by TigerGraph',
     location: '2000+ Participants',
     emoji: '🏆',

@@ -6,6 +6,16 @@ import useVisible from '../hooks/useVisible';
 const projects = [
   {
     id: '01',
+    category: 'AI / DATA',
+    title: 'GraphRAG Performance Benchmarking Engine',
+    description: 'A benchmarking platform comparing baseline LLM, vector RAG, and GraphRAG pipelines on a Wikipedia knowledge graph. Cuts token usage per query from ~1,400 to ~200 while retaining accuracy, validated via automated BERTScore evaluation.',
+    techStack: ['Python', 'FastAPI', 'Uvicorn', 'Groq LLM (Llama-3.1-8b)', 'FAISS', 'Neo4j', 'Cypher', 'BERTScore', 'Tiktoken', 'React', 'Vite', 'Recharts', 'Docker'],
+    liveUrl: 'https://graph-rag-chi.vercel.app/',
+    codeUrl: 'https://github.com/maithili39/GraphRAG',
+    image: '/images/graphrag.png',
+  },
+  {
+    id: '02',
     category: 'AI / WEB',
     title: 'SkinGuard',
     description: 'An intelligent skincare analysis platform where users scan product labels via camera or barcode. It extracts ingredients with OCR, analyzes them using LLM and semantic embeddings, detects routine conflicts, scores safety, and delivers personalized recommendations based on skin profiles.',
@@ -13,16 +23,6 @@ const projects = [
     liveUrl: 'https://skin-guard-nu.vercel.app/',
     codeUrl: 'https://github.com/maithili39/SkinGuard',
     image: '/images/sguard.png',
-  },
-  {
-    id: '02',
-    category: 'AI',
-    title: 'BIS RAG Engine',
-    description: 'A Retrieval-Augmented Generation (RAG) system mapping manufacturing product descriptions to Bureau of Indian Standards regulations, using hybrid retrieval and zero hallucinations.',
-    techStack: ['Python', 'Sentence-Transformers', 'LangChain-HuggingFace', 'Rank-BM25', 'OpenAI GPT-3.5', 'NumPy', 'PyPDF', 'LangChain-Core', 'Pickle', 'Python-Dotenv'],
-    liveUrl: 'https://maithili39-bis-rag-engine.hf.space/',
-    codeUrl: 'https://github.com/maithili39/bis-rag-engine',
-    image: '/images/bis-finder.png',
   },
   {
     id: '03',
@@ -33,6 +33,16 @@ const projects = [
     liveUrl: 'https://civicsense-bice.vercel.app/',
     codeUrl: 'https://github.com/maithili39/HackgenX',
     image: '/images/civicsense1.png',
+  },
+  {
+    id: '04',
+    category: 'AI',
+    title: 'BIS RAG Engine',
+    description: 'A Retrieval-Augmented Generation (RAG) system mapping manufacturing product descriptions to Bureau of Indian Standards regulations, using hybrid retrieval and zero hallucinations.',
+    techStack: ['Python', 'Sentence-Transformers', 'LangChain-HuggingFace', 'Rank-BM25', 'OpenAI GPT-3.5', 'NumPy', 'PyPDF', 'LangChain-Core', 'Pickle', 'Python-Dotenv'],
+    liveUrl: 'https://maithili39-bis-rag-engine.hf.space/',
+    codeUrl: 'https://github.com/maithili39/bis-rag-engine',
+    image: '/images/bis-finder.png',
   },
 ];
 
