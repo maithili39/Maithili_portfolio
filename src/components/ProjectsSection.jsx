@@ -7,11 +7,11 @@ const projects = [
   {
     id: '01',
     category: 'AI / DATA',
-    title: 'GraphRAG Performance Benchmarking Engine',
-    description: 'A benchmarking platform comparing baseline LLM, vector RAG, and GraphRAG pipelines on a Wikipedia knowledge graph. Cuts token usage per query from ~1,400 to ~200 while retaining accuracy, validated via automated BERTScore evaluation.',
-    techStack: ['Python', 'FastAPI', 'Uvicorn', 'Groq LLM (Llama-3.1-8b)', 'FAISS', 'Neo4j', 'Cypher', 'BERTScore', 'Tiktoken', 'React', 'Vite', 'Recharts', 'Docker'],
-    liveUrl: 'https://graph-rag-chi.vercel.app/',
-    codeUrl: 'https://github.com/maithili39/GraphRAG',
+    title: 'GraphRAG vs Basic RAG vs LLM-only',
+    description: 'A live dashboard comparing three retrieval strategies on multi-hop legal questions over a 63,632-case U.S. case-law citation graph in TigerGraph. GraphRAG walks real citation edges and hits 69.1% pass rate vs 14.5% for flat FAISS retrieval and 32.7% for LLM-only — a 4.7x win using 32% fewer tokens, judged via LLM-as-a-Judge and BERTScore.',
+    techStack: ['Python', 'TigerGraph', 'GSQL', 'FAISS', 'Gemini', 'HuggingFace InferenceClient', 'BERTScore', 'eyecite', 'courts-db', 'React', 'JavaScript'],
+    liveUrl: 'https://graphrag-dashboard.vercel.app/',
+    codeUrl: 'https://github.com/maithili39/graphrag',
     image: '/images/graphrag.png',
   },
   {
@@ -27,6 +27,16 @@ const projects = [
   {
     id: '03',
     category: 'AI / WEB',
+    title: 'CritiQ — AI-Powered Candidate Screening',
+    description: 'An AI-powered platform that runs a complete technical screening interview end to end. Parses resumes, generates adaptive role-specific questions grounded via RAG over curated knowledge-base PDFs, scores each answer live against a rubric, and produces a structured, traceable hiring report with a recommendation.',
+    techStack: ['Python', 'FastAPI', 'SQLAlchemy', 'Alembic', 'Pydantic', 'PostgreSQL', 'Redis', 'ChromaDB', 'Sentence-Transformers', 'Anthropic Claude', 'Groq', 'PyMuPDF', 'React 19', 'TypeScript', 'Vite', 'Tailwind CSS'],
+    liveUrl: 'https://criti-q-nu.vercel.app/',
+    codeUrl: 'https://github.com/maithili39/CritiQ',
+    image: '/images/critiq.png',
+  },
+  {
+    id: '04',
+    category: 'AI / WEB',
     title: 'CivicSense',
     description: 'An enterprise-grade public grievance redressal platform that leverages Zero-Shot AI to instantly categorize, prioritize, and route citizen complaints. Eliminates manual triage by extracting sentiment and risk level from every complaint, with five real-time dashboards via Socket.IO and automated SLA alerts that escalate overdue tickets to higher authorities.',
     techStack: ['React', 'Vite', 'CSS', 'Node.js', 'Express', 'Socket.IO', 'MongoDB Atlas', 'Python', 'FastAPI', 'PyTorch', 'HuggingFace', 'DistilBERT', 'Vercel', 'Render'],
@@ -35,7 +45,7 @@ const projects = [
     image: '/images/civicsense1.png',
   },
   {
-    id: '04',
+    id: '05',
     category: 'AI',
     title: 'BIS RAG Engine',
     description: 'A Retrieval-Augmented Generation (RAG) system mapping manufacturing product descriptions to Bureau of Indian Standards regulations, using hybrid retrieval and zero hallucinations.',

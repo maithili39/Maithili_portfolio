@@ -3,23 +3,6 @@ import useVisible from '../hooks/useVisible';
 
 const experiences = [
   {
-    id: 3,
-    role: 'Artificial Intelligence Intern',
-    company: 'Springer Capital',
-    period: 'Jun 2026 – Present',
-    companyBg: 'bg-[#A2D2FF] text-[#1d3557]',
-    periodBg: 'bg-[#BDE0FE] text-[#1d3557]',
-    skillBg: 'bg-[#FFD6A5] text-[#7c4700]',
-    description: (
-      <ul className="list-disc ml-5 space-y-2 text-neutral-700 text-sm font-medium font-sans-display">
-        <li>Support data preprocessing and model preparation for machine learning experiments on real-world AI use cases.</li>
-        <li>Implement AI-driven features and evaluate experiment results against project requirements.</li>
-        <li>Document project outcomes and findings to guide iterative improvements.</li>
-      </ul>
-    ),
-    skills: ['Python', 'Machine Learning', 'Data Preprocessing', 'AI Research']
-  },
-  {
     id: 1,
     role: 'Web Developer Intern',
     company: 'Trust Fintech',
