@@ -13,7 +13,7 @@ const projects = [
     techStack: ['Python', 'FastAPI', 'TigerGraph', 'GSQL', 'FAISS', 'Gemini', 'React.js', 'HuggingFace InferenceClient', 'BERTScore', 'eyecite', 'courts-db'],
     liveUrl: 'https://graphrag-six.vercel.app/',
     codeUrl: 'https://github.com/maithili39/grag',
-    image: '/images/graphrag.png',
+    image: '/images/grag.png',
   },
   {
     id: '02',
