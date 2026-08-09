@@ -11,8 +11,8 @@ const projects = [
     highlight: '🏆 1st Place · 5.6× more accurate than Basic RAG',
     description: 'A GraphRAG pipeline over a TigerGraph knowledge graph of 63,632 U.S. court opinions (9,632 citation edges, 1,413 courts), enabling multi-hop legal question answering via live GSQL traversal of citation relationships. Benchmarked against Basic RAG (FAISS, 500,959 chunks) and an LLM-only baseline on 55 multi-hop questions — a 50.9% pass rate vs 9.1% for Basic RAG (5.6x improvement) using 37.8% fewer tokens. 1st Place, TigerGraph GraphRAG Inference Hackathon.',
     techStack: ['Python', 'FastAPI', 'TigerGraph', 'GSQL', 'FAISS', 'Gemini', 'React.js', 'HuggingFace InferenceClient', 'BERTScore', 'eyecite', 'courts-db'],
-    liveUrl: 'https://graphrag-dashboard.vercel.app/',
-    codeUrl: 'https://github.com/maithili39/graphrag',
+    liveUrl: 'https://graphrag-six.vercel.app/',
+    codeUrl: 'https://github.com/maithili39/grag',
     image: '/images/graphrag.png',
   },
   {
