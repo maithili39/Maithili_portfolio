@@ -3,103 +3,16 @@ import { FiGithub, FiLinkedin, FiMail } from 'react-icons/fi';
 
 const HeroSection = () => {
   const [mounted, setMounted] = useState(false);
-  const [spotlightPos, setSpotlightPos] = useState({ x: 0, y: 0 });
-  const canvasRef = React.useRef(null);
 
   useEffect(() => {
     const t = setTimeout(() => setMounted(true), 100);
     return () => clearTimeout(t);
   }, []);
 
-  useEffect(() => {
-    let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-    let current = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-    let animationFrameId;
-    const handleMouseMove = (e) => { mouse.x = e.clientX; mouse.y = e.clientY; };
-    const updatePosition = () => {
-      current.x += (mouse.x - current.x) * 0.06;
-      current.y += (mouse.y - current.y) * 0.06;
-      setSpotlightPos({ x: current.x, y: current.y });
-      animationFrameId = requestAnimationFrame(updatePosition);
-    };
-    window.addEventListener('mousemove', handleMouseMove);
-    updatePosition();
-    return () => { window.removeEventListener('mousemove', handleMouseMove); cancelAnimationFrame(animationFrameId); };
-  }, []);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    let animationFrameId;
-    let width = (canvas.width = window.innerWidth);
-    let height = (canvas.height = window.innerHeight);
-    const handleResize = () => { if (!canvas) return; width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; };
-    window.addEventListener('resize', handleResize);
-    const particles = [];
-    const particleCount = Math.min(50, Math.floor((width * height) / 25000));
-    const connectionDistance = 130;
-    const mouse = { x: null, y: null, radius: 180 };
-    const handleMouseMove = (e) => { mouse.x = e.clientX; mouse.y = e.clientY; };
-    const handleMouseLeave = () => { mouse.x = null; mouse.y = null; };
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseleave', handleMouseLeave);
-
-    class Particle {
-      constructor() {
-        this.x = Math.random() * width;
-        this.y = Math.random() * height;
-        this.vx = (Math.random() - 0.5) * 0.4;
-        this.vy = (Math.random() - 0.5) * 0.4;
-        this.radius = Math.random() * 2.2 + 0.8;
-        const r = Math.random();
-        this.color = r > 0.92 ? 'rgba(251,113,133,0.55)' : r > 0.82 ? 'rgba(250,210,225,0.6)' : 'rgba(0,0,0,0.07)';
-      }
-      update() {
-        this.x += this.vx; this.y += this.vy;
-        if (this.x < 0 || this.x > width) this.vx *= -1;
-        if (this.y < 0 || this.y > height) this.vy *= -1;
-        if (mouse.x !== null && mouse.y !== null) {
-          const dx = mouse.x - this.x, dy = mouse.y - this.y;
-          const dist = Math.hypot(dx, dy);
-          if (dist < mouse.radius) { const force = (mouse.radius - dist) / mouse.radius; this.x += (dx / dist) * force * 0.8; this.y += (dy / dist) * force * 0.8; }
-        }
-      }
-      draw() { ctx.beginPath(); ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2); ctx.fillStyle = this.color; ctx.fill(); }
-    }
-
-    for (let i = 0; i < particleCount; i++) particles.push(new Particle());
-
-    const animate = () => {
-      ctx.clearRect(0, 0, width, height);
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x, dy = particles[i].y - particles[j].y;
-          const dist = Math.hypot(dx, dy);
-          if (dist < connectionDistance) {
-            const alpha = (1 - dist / connectionDistance) * 0.06;
-            ctx.beginPath(); ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = `rgba(180,60,60,${alpha})`; ctx.lineWidth = 0.5; ctx.stroke();
-          }
-        }
-      }
-      particles.forEach(p => { p.update(); p.draw(); });
-      animationFrameId = requestAnimationFrame(animate);
-    };
-    animate();
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseleave', handleMouseLeave);
-      cancelAnimationFrame(animationFrameId);
-    };
-  }, []);
-
   return (
     <section
       id="hero"
-      className="relative min-h-[88vh] bg-[#FAF8F5] text-black flex flex-col justify-center px-6 md:px-12 lg:px-24 pt-20 pb-10 overflow-hidden"
+      className="relative h-screen bg-coral text-ink flex flex-col justify-center px-6 md:px-12 lg:px-24 pt-20 pb-4 overflow-hidden"
     >
       <style>{`
         @keyframes slideUpHero {
@@ -110,150 +23,285 @@ const HeroSection = () => {
           from { opacity: 0; transform: translateY(14px); }
           to   { opacity: 1; transform: translateY(0); }
         }
-        @keyframes pulseDot {
-          0%, 100% { transform: scale(1); opacity: 0.75; }
-          50%       { transform: scale(1.4); opacity: 1; }
-        }
         @keyframes floatBadge {
-          0%, 100% { transform: translateY(0px); }
-          50%       { transform: translateY(-4px); }
+          0%, 100% { transform: translateY(0px) rotate(-2deg); }
+          50%       { transform: translateY(-6px) rotate(2deg); }
         }
         .hero-slide-up { animation: slideUpHero 1.3s cubic-bezier(0.16,1,0.3,1) forwards; }
         .hero-fade-in  { opacity: 0; animation: heroFadeIn 1s cubic-bezier(0.16,1,0.3,1) forwards; }
-        .badge-float   { animation: floatBadge 3s ease-in-out infinite; }
-        .dot-pulse     { animation: pulseDot 2s ease-in-out infinite; }
-        .bg-dot-pattern {
-          background-size: 22px 22px;
-          background-image: radial-gradient(circle, rgba(120,80,200,0.07) 1px, transparent 1px);
-        }
+        .badge-float   { animation: floatBadge 4s ease-in-out infinite; }
         .hero-btn-primary {
-          background: #111; color: #fff; border: 2px solid #111;
+          background: var(--color-rust); color: var(--color-cream); border: 2px solid var(--color-rust);
           transition: background 0.25s, box-shadow 0.25s, transform 0.2s;
         }
         .hero-btn-primary:hover {
-          background: #9f1239;
-          box-shadow: 5px 5px 0 #fda4af;
+          background: var(--color-rust-deep);
+          box-shadow: 5px 5px 0 var(--color-ink);
           transform: translateY(-2px);
         }
         .hero-btn-secondary {
-          background: transparent; color: #111; border: 2px solid rgba(0,0,0,0.15);
-          transition: background 0.25s, color 0.25s, border-color 0.25s, transform 0.2s;
+          background: transparent; color: var(--color-ink); border: 2px solid var(--color-ink);
+          transition: background 0.25s, color 0.25s, transform 0.2s;
         }
         .hero-btn-secondary:hover {
-          background: #111; color: #fff; border-color: #111;
+          background: var(--color-ink); color: var(--color-cream);
           transform: translateY(-2px);
         }
         .social-icon {
           transition: background 0.25s, color 0.25s, transform 0.25s, box-shadow 0.25s;
         }
         .social-icon:hover {
-          background: #e11d48; color: #fff; border-color: #e11d48;
+          background: var(--color-ink); color: var(--color-cream); border-color: var(--color-ink);
           transform: translateY(-3px);
-          box-shadow: 0 4px 12px rgba(225,29,72,0.25);
         }
+        @keyframes spinSlow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes spinCCW { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
+        @keyframes floatBob {
+          0%, 100% { transform: translateY(0px) rotate(var(--r, 0deg)); }
+          50% { transform: translateY(-12px) rotate(calc(var(--r, 0deg) + 5deg)); }
+        }
+        @keyframes drift {
+          0%, 100% { transform: translate(0px, 0px) rotate(var(--r, 0deg)); }
+          50% { transform: translate(10px, -14px) rotate(calc(var(--r, 0deg) - 6deg)); }
+        }
+        @keyframes wiggle {
+          0%, 100% { transform: rotate(calc(var(--r, 0deg) - 5deg)); }
+          50% { transform: rotate(calc(var(--r, 0deg) + 7deg)); }
+        }
+        @keyframes pulse { 0%, 100% { opacity: 0.3; transform: scale(0.85); } 50% { opacity: 1; transform: scale(1.1); } }
+        @keyframes heroMarquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .spin-ccw    { animation: spinCCW 18s linear infinite; }
+        .bob-float   { animation: bob 3.6s ease-in-out infinite; }
+        .bob-side    { animation: bobSide 4s ease-in-out infinite; }
+        .twinkle     { animation: twinkle 2.4s ease-in-out infinite; }
+        .wiggle-slow { animation: wiggle 3s ease-in-out infinite; }
+        .drift-float { animation: drift 5s ease-in-out infinite; }
+        .hero-marquee-track { animation: heroMarquee 22s linear infinite; }
       `}</style>
+      
 
-      {/* Canvas particle background */}
-      <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 0 }} />
 
-      {/* Dot pattern */}
-      <div className="absolute inset-0 bg-dot-pattern pointer-events-none opacity-60" style={{ zIndex: 1 }} />
 
-      {/* Mouse spotlight */}
-      <div
-        className="absolute w-[700px] h-[700px] rounded-full pointer-events-none mix-blend-multiply filter blur-[130px] opacity-[0.14] hidden md:block"
-        style={{
-          background: 'radial-gradient(circle, #fda4af 0%, #fde68a 55%, transparent 100%)',
-          left: `${spotlightPos.x - 350}px`,
-          top: `${spotlightPos.y - 350}px`,
-          transform: 'translate3d(0,0,0)',
-          zIndex: 2,
-        }}
-      />
 
-      {/* Decorative blobs */}
-      <div className="absolute top-16 right-12 w-64 h-64 rounded-full pointer-events-none hidden lg:block"
-        style={{ background: 'radial-gradient(circle, rgba(253,164,175,0.2) 0%, transparent 70%)', zIndex: 2, filter: 'blur(40px)' }} />
-      <div className="absolute bottom-20 left-8 w-48 h-48 rounded-full pointer-events-none hidden lg:block"
-        style={{ background: 'radial-gradient(circle, rgba(253,230,138,0.22) 0%, transparent 70%)', zIndex: 2, filter: 'blur(30px)' }} />
+      {/* Decorative Wavy/Blob Vignettes */}
+      <div className="absolute left-0 top-[15%] w-[18vw] h-[45vh] bg-rust/5 rounded-r-full blur-3xl pointer-events-none select-none" aria-hidden="true" />
+      <div className="absolute right-0 bottom-[10%] w-[22vw] h-[55vh] bg-rust/10 rounded-l-full blur-3xl pointer-events-none select-none" aria-hidden="true" />
 
-      {/* Status badge */}
-      <div className="relative flex items-center justify-center pt-4" style={{ zIndex: 10 }}>
-        <div className="badge-float flex items-center gap-2.5 hero-fade-in px-4 py-1.5 rounded-full border border-emerald-400/20 bg-emerald-50/70 backdrop-blur-sm shadow-sm"
-          style={{ animationDelay: '0.1s' }}>
-          <span className="relative flex h-2 w-2">
-            <span className="dot-pulse absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
-          </span>
-          <span className="font-mono-display text-[9px] font-bold uppercase tracking-[0.25em] text-emerald-800">
-            Open to Work
-          </span>
+      {/* Decorative Dot Patterns */}
+      <div className="absolute left-[3%] top-[18%] opacity-20 select-none pointer-events-none z-0" aria-hidden="true">
+        <div className="grid grid-cols-5 gap-2 text-ink">
+          {Array.from({ length: 25 }).map((_, i) => (
+            <span key={i} className="w-1 h-1 rounded-full bg-current" />
+          ))}
+        </div>
+      </div>
+      <div className="absolute right-[3%] top-[65%] opacity-20 select-none pointer-events-none z-0" aria-hidden="true">
+        <div className="grid grid-cols-5 gap-2 text-ink">
+          {Array.from({ length: 25 }).map((_, i) => (
+            <span key={i} className="w-1 h-1 rounded-full bg-current" />
+          ))}
         </div>
       </div>
 
-      {/* Main content */}
-      <div className="relative flex-1 flex flex-col justify-center items-center text-center gap-6 py-12 max-w-4xl mx-auto w-full" style={{ zIndex: 10 }}>
+      {/* Background Doodles */}
+      {/* 1. Paper Airplane */}
+      <div className="hidden lg:block absolute top-[15%] left-[28%] text-ink/30 pointer-events-none select-none z-0 float-bob" aria-hidden="true">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+          <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+        <svg width="100" height="50" viewBox="0 0 100 50" fill="none" className="absolute top-[35px] right-[15px] text-ink/15">
+          <path d="M100 0 C 70 30, 30 30, 0 15" stroke="currentColor" strokeWidth="1.5" strokeDasharray="3 3" strokeLinecap="round" />
+        </svg>
+      </div>
 
-        {/* Name */}
-        <h1 className="font-sans-display text-[clamp(3.2rem,9vw,7rem)] font-black uppercase tracking-tighter text-[#0f0f0f] leading-[0.9] select-none">
-          <span className="block overflow-hidden">
-            <span className="inline-block"
-              style={{ transform: 'translateY(100%) skewY(2deg)', opacity: 0,
-                animation: mounted ? 'slideUpHero 1.3s cubic-bezier(0.16,1,0.3,1) forwards' : 'none',
-                animationDelay: '0.15s' }}>
-              Maithili
-            </span>
-          </span>
-          <span className="block overflow-hidden mt-1">
-            <span className="inline-block text-[#e11d48]"
-              style={{ transform: 'translateY(100%) skewY(2deg)', opacity: 0,
-                animation: mounted ? 'slideUpHero 1.3s cubic-bezier(0.16,1,0.3,1) forwards' : 'none',
-                animationDelay: '0.3s' }}>
-              Dorkhande
-            </span>
-          </span>
-        </h1>
+      {/* 2. Code tag */}
+      <div className="hidden md:block absolute top-[38%] left-[24%] text-ink/30 pointer-events-none select-none z-0 drift-float" aria-hidden="true">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="16 18 22 12 16 6" />
+          <polyline points="8 6 2 12 8 18" />
+        </svg>
+      </div>
 
-        {/* Tagline */}
-        <p className="font-sans-display hero-fade-in text-base md:text-lg font-medium text-neutral-500 max-w-2xl mx-auto leading-relaxed"
-          style={{ animationDelay: '0.5s' }}>
-          Final-year CS student building{' '}
-          <span className="font-bold text-[#0f0f0f]">intelligent systems</span> at the intersection of{' '}
-          <span className="font-bold text-[#0f0f0f]">artificial intelligence</span> &{' '}
-          <span className="font-bold text-[#0f0f0f]">full-stack engineering</span>.
-        </p>
+      {/* 3. Browser window */}
+      <div className="hidden lg:block absolute top-[35%] left-[8%] text-ink/25 pointer-events-none select-none z-0 bob-float" aria-hidden="true">
+        <svg width="44" height="32" viewBox="0 0 48 34" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="2" y="2" width="44" height="30" rx="4" />
+          <line x1="2" y1="10" x2="46" y2="10" />
+          <circle cx="8" cy="6" r="1.5" fill="currentColor" />
+          <circle cx="14" cy="6" r="1.5" fill="currentColor" />
+          <circle cx="20" cy="6" r="1.5" fill="currentColor" />
+        </svg>
+      </div>
 
-        {/* Buttons */}
-        <div className="hero-fade-in flex flex-col items-center gap-6 mt-6" style={{ animationDelay: '0.65s' }}>
-          <div className="flex flex-wrap justify-center gap-4">
-            <a href="#projects"
-              className="hero-btn-primary inline-flex items-center justify-center px-8 py-3.5 text-xs font-bold uppercase tracking-widest rounded-none group">
-              <span className="flex items-center gap-2">
-                View Work
-                <span className="inline-block transition-transform group-hover:translate-x-1 duration-300">→</span>
-              </span>
-            </a>
-            <a href={`${import.meta.env.BASE_URL}resume.pdf`} target="_blank" rel="noopener noreferrer"
-              className="hero-btn-secondary inline-flex items-center justify-center px-8 py-3.5 text-xs font-bold uppercase tracking-widest rounded-none">
-              Resume ↗
-            </a>
-          </div>
+      {/* 4. Brackets */}
+      <div className="hidden md:block absolute top-[52%] left-[13%] text-ink/30 pointer-events-none select-none z-0 wiggle-slow" aria-hidden="true">
+        <span className="font-display text-2xl font-bold select-none">{"{ }"}</span>
+      </div>
 
-          {/* Social icons */}
-          <div className="flex items-center gap-4 mt-1">
-            {[
-              { href: 'https://github.com/maithili39', icon: <FiGithub size={18} />, label: 'GitHub' },
-              { href: 'https://www.linkedin.com/in/maithili-dorkhande/', icon: <FiLinkedin size={18} />, label: 'LinkedIn' },
-              { href: 'mailto:maithilidorkhande6@gmail.com', icon: <FiMail size={18} />, label: 'Email' },
-            ].map(({ href, icon, label }) => (
-              <a key={label} href={href} target={label !== 'Email' ? '_blank' : undefined}
-                rel="noopener noreferrer" aria-label={label}
-                className="social-icon p-3 rounded-full border border-neutral-200/70 bg-white/60 text-neutral-600">
-                {icon}
-              </a>
-            ))}
+      {/* 5. Coffee cup */}
+      <div className="hidden md:block absolute top-[68%] left-[18%] text-ink/30 pointer-events-none select-none z-0 drift-float" aria-hidden="true">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M18 8h1a4 4 0 0 1 0 8h-1M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z" />
+          <path d="M6 2v3M10 2v3M14 2v3" />
+        </svg>
+      </div>
+
+      {/* 6. Lightning bolt */}
+      <div className="hidden md:block absolute top-[36%] right-[32%] text-ink/35 pointer-events-none select-none z-0 twinkle" aria-hidden="true">
+        <svg width="22" height="30" viewBox="0 0 24 32" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <polygon points="13 2 3 18 11 18 11 30 21 14 13 14" />
+        </svg>
+      </div>
+
+      {/* 7. Swirly loop arrow */}
+      <div className="hidden lg:block absolute top-[30%] right-[24%] text-ink/30 pointer-events-none select-none z-0 drift-float" aria-hidden="true">
+        <svg width="36" height="36" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M10 10 C 15 5, 25 5, 30 15 C 35 25, 25 35, 15 30 C 5 25, 10 15, 20 20" />
+          <polyline points="15 22 20 20 18 15" />
+        </svg>
+      </div>
+
+      {/* Hi Intro — right side, floating plain text */}
+      <div className="hidden md:block absolute top-[22%] right-[6%] lg:right-[9%] z-10 select-none badge-float" style={{ animationDelay: '0s' }}>
+        <div className="flex items-center gap-2.5">
+          <span className="text-2xl">👋</span>
+          <div>
+            <p className="font-display text-ink/50 text-[11px] uppercase tracking-widest leading-none">Hey there,</p>
+            <p className="font-display text-ink text-[15px] font-bold leading-tight">I'm Maithili</p>
           </div>
         </div>
+      </div>
+
+      {/* Open to Work — left side, floating pill no box */}
+      <div className="hidden md:block absolute top-[28%] left-[6%] lg:left-[8%] z-10 select-none badge-float" style={{ animationDelay: '0.8s' }}>
+        <div className="flex items-center gap-2">
+          <span className="relative flex h-2.5 w-2.5">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
+          </span>
+          <span className="font-display text-ink text-[12px] font-bold uppercase tracking-wider">Open to Work</span>
+        </div>
+      </div>
+
+      {/* Circular rotating text ring — right side */}
+      <div className="hidden md:block absolute top-[42%] right-[3%] lg:right-[5%] z-10 pointer-events-none select-none" aria-hidden="true">
+        <style>{`
+          @keyframes spinRing { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+          .spin-ring { animation: spinRing 14s linear infinite; transform-origin: center; }
+        `}</style>
+        <div className="relative w-[130px] h-[130px]">
+          {/* rotating text */}
+          <svg className="spin-ring absolute inset-0" width="130" height="130" viewBox="0 0 130 130">
+            <defs>
+              <path id="circle-path" d="M 65,65 m -48,0 a 48,48 0 1,1 96,0 a 48,48 0 1,1 -96,0" />
+            </defs>
+            <text fill="var(--color-ink)" fontSize="10.5" fontFamily="'Archivo Black', sans-serif" letterSpacing="2.2" opacity="0.75">
+              <textPath href="#circle-path">
+                Problem Solver • AI Dev • Web Builder • Creative Coder •&nbsp;
+              </textPath>
+            </text>
+          </svg>
+          {/* center dot */}
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="w-3 h-3 rounded-full bg-rust/60" />
+          </div>
+        </div>
+      </div>
+
+
+      {/* Main content: centered column */}
+
+      <div className="relative flex-1 min-h-0 flex flex-col items-center justify-center w-full" style={{ zIndex: 10 }}>
+
+        {/* Center image container - increased size & shifted upwards */}
+        <div className="relative w-full flex-1 min-h-0 flex items-center justify-center mt-[-4vh] mb-[-4vh]">
+          {/* Background Filled DEVELOPER Text */}
+          <div
+            className="hidden md:block absolute inset-x-0 top-1/2 -translate-y-1/2 font-display uppercase leading-none select-none pointer-events-none whitespace-nowrap text-center text-ink"
+            style={{ fontSize: 'clamp(2.5rem, 16vh, 16rem)', zIndex: 0 }}
+            aria-hidden="true"
+          >
+            DEVELOPER
+          </div>
+          <img
+            src={`${import.meta.env.BASE_URL}images/hero-illustration.png`}
+            alt="Maithili Dorkhande at her desk"
+            className="hero-fade-in relative h-full max-h-[92vh] sm:max-h-[100vh] md:max-h-[108vh] lg:max-h-[116vh] w-auto object-contain"
+            style={{ animationDelay: '0.2s', zIndex: 1 }}
+          />
+          {/* Foreground Outlined DEVELOPER Text */}
+          <div
+            className="hidden md:block absolute inset-x-0 top-1/2 -translate-y-1/2 font-display uppercase leading-none select-none pointer-events-none whitespace-nowrap text-center text-transparent"
+            style={{ fontSize: 'clamp(2.5rem, 16vh, 16rem)', zIndex: 2, WebkitTextStroke: '3px var(--color-ink)' }}
+            aria-hidden="true"
+          >
+            DEVELOPER
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom Social Icons & Resume Footer Row */}
+      <div className="flex justify-center items-center gap-5 pb-6 mt-8" style={{ zIndex: 10 }}>
+        <a
+          href={`${import.meta.env.BASE_URL}resume.pdf`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center justify-center gap-2 px-10 py-2.5 rounded-full border-2 border-ink bg-[#c7f9cc] text-ink hover:bg-rust hover:text-cream hover:border-rust text-[12px] font-extrabold uppercase tracking-wider transition-all duration-200 shadow-[2px_2px_0_0_var(--color-ink)] hover:shadow-[3px_3px_0_0_var(--color-rust)] hover:-translate-y-1"
+          title="Resume"
+        >
+          <span>RESUME</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+            <polyline points="14 2 14 8 20 8" />
+            <line x1="16" y1="13" x2="8" y2="13" />
+            <line x1="16" y1="17" x2="8" y2="17" />
+          </svg>
+        </a>
+        <a
+          href="#about"
+          className="flex items-center justify-center gap-2 px-10 py-2.5 rounded-full border-2 border-ink bg-[#c4b5fd] text-ink hover:bg-rust hover:text-cream hover:border-rust text-[12px] font-extrabold uppercase tracking-wider transition-all duration-200 shadow-[2px_2px_0_0_var(--color-ink)] hover:shadow-[3px_3px_0_0_var(--color-rust)] hover:-translate-y-1"
+          title="About"
+        >
+          <span>ABOUT</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="8" r="4" />
+            <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+          </svg>
+        </a>
+        <a
+          href="https://github.com/maithili39"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center justify-center w-12 h-12 rounded-full border-2 border-ink bg-[#e9c46a] text-ink hover:bg-rust hover:text-cream hover:border-rust transition-all duration-200 shadow-[2px_2px_0_0_var(--color-ink)] hover:shadow-[3px_3px_0_0_var(--color-rust)] hover:-translate-y-1"
+          title="GitHub"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+          </svg>
+        </a>
+        <a
+          href="https://linkedin.com/in/maithili-dorkhande"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center justify-center w-12 h-12 rounded-full border-2 border-ink bg-[#e9c46a] text-ink hover:bg-rust hover:text-cream hover:border-rust transition-all duration-200 shadow-[2px_2px_0_0_var(--color-ink)] hover:shadow-[3px_3px_0_0_var(--color-rust)] hover:-translate-y-1"
+          title="LinkedIn"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+            <rect x="2" y="9" width="4" height="12" />
+            <circle cx="4" cy="4" r="2" />
+          </svg>
+        </a>
+        <a
+          href="mailto:maithilidorkhande39@gmail.com"
+          className="flex items-center justify-center w-12 h-12 rounded-full border-2 border-ink bg-[#e9c46a] text-ink hover:bg-rust hover:text-cream hover:border-rust transition-all duration-200 shadow-[2px_2px_0_0_var(--color-ink)] hover:shadow-[3px_3px_0_0_var(--color-rust)] hover:-translate-y-1"
+          title="Email"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+            <polyline points="22,6 12,13 2,6" />
+          </svg>
+        </a>
       </div>
 
     </section>
