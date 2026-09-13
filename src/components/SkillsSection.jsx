@@ -87,14 +87,14 @@ const SkillsSection = () => {
         <div className={`w-full grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-stretch ${visible ? 'animate-fade-up delay-1' : 'opacity-0'}`}>
           
           {/* Left Column: Vertical Tabs */}
-          <div className="md:col-span-4 flex flex-row md:flex-col overflow-x-auto md:overflow-x-visible gap-3 pb-3 md:pb-0 scrollbar-none w-full h-full justify-between">
+          <div className="md:col-span-4 flex flex-row md:flex-col overflow-x-auto md:overflow-x-visible gap-3 pb-3 md:pb-0 scrollbar-none w-full h-full justify-start md:justify-between snap-x snap-mandatory md:snap-none -mx-4 px-4 md:mx-0 md:px-0">
             {skillCategories.map((category, index) => {
               const isActive = activeTab === index;
               return (
                 <button
                   key={index}
                   onClick={() => setActiveTab(index)}
-                  className={`font-sans-display flex items-center justify-between px-5 py-4 border-2 border-ink font-black uppercase tracking-widest text-xs transition-all duration-300 text-left shrink-0 md:shrink-1 select-none cursor-pointer w-full group flex-1 ${
+                  className={`font-sans-display flex items-center justify-between gap-3 px-4 sm:px-5 py-3.5 sm:py-4 border-2 border-ink font-black uppercase tracking-widest text-xs transition-all duration-300 text-left shrink-0 select-none cursor-pointer group w-auto md:w-full md:flex-1 ${
                     isActive
                       ? 'bg-ink text-cream shadow-[4px_4px_0_0_var(--color-rust)] -translate-y-0.5'
                       : 'bg-cream text-ink hover:bg-cream-alt shadow-[3px_3px_0_0_var(--color-ink)] hover:-translate-y-0.5 hover:shadow-[4px_4px_0_0_var(--color-ink)]'
@@ -108,11 +108,6 @@ const SkillsSection = () => {
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <span className={`font-mono-display text-[10px] font-bold px-1.5 py-0.5 border rounded-full ${
-                      isActive ? 'border-cream/40 text-cream/70' : 'border-ink/20 text-ink/40'
-                    }`}>
-                      {category.skills.length}
-                    </span>
                     {/* Subtle arrow indicator sliding in on hover / active */}
                     <span className={`text-xs transition-all duration-300 ${
                       isActive

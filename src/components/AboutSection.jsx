@@ -1,17 +1,5 @@
 import React from 'react';
-import { SiPython, SiReact, SiFastapi, SiPostgresql, SiDocker, SiGithub, SiClaude, SiPostman } from 'react-icons/si';
 import useVisible from '../hooks/useVisible';
-
-const tools = [
-  { icon: <SiClaude />, label: 'Claude', rotate: -8, top: '4%', left: '58%' },
-  { icon: <SiGithub />, label: 'GitHub', rotate: 6, top: '2%', left: '80%' },
-  { icon: <SiPython />, label: 'Python', rotate: -4, top: '32%', left: '90%' },
-  { icon: <SiFastapi />, label: 'FastAPI', rotate: 8, top: '60%', left: '86%' },
-  { icon: <SiReact />, label: 'React', rotate: -10, top: '82%', left: '64%' },
-  { icon: <SiPostgresql />, label: 'Postgres', rotate: 5, top: '86%', left: '36%' },
-  { icon: <SiDocker />, label: 'Docker', rotate: -6, top: '64%', left: '10%' },
-  { icon: <SiPostman />, label: 'Postman', rotate: 9, top: '34%', left: '4%' },
-];
 
 const AboutSection = () => {
   const [ref, visible] = useVisible();
@@ -80,7 +68,11 @@ const AboutSection = () => {
                   ship
                 </span>
                 {/* Curved loop arrow pointing back to explore (left) - longer and deeper curve */}
-                <svg className="absolute -bottom-14 right-2 w-[320px] sm:w-[520px] h-16 text-rust/70 pointer-events-none" viewBox="0 0 450 60" fill="none" aria-hidden="true">
+                {/* Anchored to a narrow word and drawn leftward. It only has
+                    room from sm up, and the wider variant only clears the
+                    viewport's left edge at xl - md/lg grew it faster than the
+                    surrounding column grew, which clipped it. */}
+                <svg className="hidden sm:block absolute -bottom-14 right-2 w-[300px] xl:w-[520px] h-16 text-rust/70 pointer-events-none" viewBox="0 0 450 60" fill="none" aria-hidden="true">
                   <path d="M 440 10 Q 225 54, 12 25" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeDasharray="4 4" />
                   <path d="M 22 17 L 10 25 L 24 31" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
@@ -94,6 +86,8 @@ const AboutSection = () => {
           <img
             src={`${import.meta.env.BASE_URL}images/image.png`}
             alt="About Maithili"
+            loading="lazy"
+            decoding="async"
             className="w-full max-w-md h-auto object-contain ml-auto"
           />
         </div>

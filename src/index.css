@@ -12,9 +12,12 @@
   --text-sm: 17px;
   --text-base: 19px;
   --text-lg: 20px;
-}
 
-:root {
+  /* The palette must live here, not in :root. Declared in @theme, Tailwind
+     generates bg-/text-/border-/stroke-/fill- utilities AND their opacity
+     modifiers (text-ink/60, bg-rust/5). Declared only in :root it generates
+     nothing, so those classes silently render as no-ops. Tailwind still
+     emits these as --color-* on :root, so var(--color-rust) keeps working. */
   --color-coral: #F2A79D;
   --color-coral-deep: #EC8F82;
   --color-cream: #F1E9D8;
@@ -24,9 +27,25 @@
   --color-ink: #241209;
 }
 
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
   font-family: var(--font-sans);
   background: var(--color-cream);
+  /* Decorative doodles sit outside the flow; stop them widening the page */
+  overflow-x: hidden;
+}
+
+/* Anchor targets must clear the fixed navbar (h-16 / md:h-20) */
+section[id] {
+  scroll-margin-top: 5rem;
+}
+
+img {
+  max-width: 100%;
 }
 
 .font-serif-display { font-family: var(--font-script); font-style: italic; }
@@ -34,14 +53,6 @@ body {
 .font-mono-display  { font-family: var(--font-mono);  }
 .font-display        { font-family: var(--font-display); }
 .font-script          { font-family: var(--font-script); font-style: italic; }
-
-.bg-coral       { background-color: var(--color-coral); }
-.bg-cream       { background-color: var(--color-cream); }
-.bg-cream-alt   { background-color: var(--color-cream-alt); }
-.text-rust      { color: var(--color-rust); }
-.text-ink       { color: var(--color-ink); }
-.border-rust    { border-color: var(--color-rust); }
-.border-ink     { border-color: var(--color-ink); }
 
 /* Oversized outline type used for decorative background words */
 .text-outline {
@@ -75,6 +86,13 @@ body {
   to   { opacity: 1; transform: scale(1);    }
 }
 
+/* Entrance animations only ever run once, so hint the compositor for the
+   transform/opacity pair and drop the hint when the animation finishes. */
+.animate-fade-up,
+.animate-fade-in,
+.animate-scale-in {
+  will-change: transform, opacity;
+}
 .animate-fade-up   { animation: fadeUp  0.7s cubic-bezier(0.16,1,0.3,1) both; }
 .animate-fade-in   { animation: fadeIn  0.7s cubic-bezier(0.16,1,0.3,1) both; }
 .animate-scale-in  { animation: scaleIn 0.6s cubic-bezier(0.16,1,0.3,1) both; }
@@ -85,3 +103,14 @@ body {
 .delay-4  { animation-delay: 0.32s; }
 .delay-5  { animation-delay: 0.40s; }
 .delay-6  { animation-delay: 0.48s; }
+
+/* Respect the OS setting: no parallax, no infinite loops, no long tweens. */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

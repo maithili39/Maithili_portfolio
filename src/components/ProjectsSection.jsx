@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { FiArrowUpRight } from 'react-icons/fi';
 import useVisible from '../hooks/useVisible';
+import useMediaQuery from '../hooks/useMediaQuery';
 
 const projects = [
   {
@@ -13,7 +14,7 @@ const projects = [
     techStack: ['Python', 'FastAPI', 'TigerGraph', 'GSQL', 'FAISS', 'Gemini', 'React.js', 'HuggingFace InferenceClient', 'BERTScore', 'eyecite', 'courts-db'],
     liveUrl: 'https://graphrag-six.vercel.app/',
     codeUrl: 'https://github.com/maithili39/grag',
-    image: '/images/grag.png',
+    image: '/grag.png',
   },
   {
     id: '02',
@@ -71,29 +72,16 @@ const CATEGORY_ACCENTS = {
 };
 const accentFor = (category) => CATEGORY_ACCENTS[category] || CATEGORY_ACCENTS['AI / WEB'];
 
-const ProjectCard = ({ project, index, total }) => {
-  const cardRef = useRef(null);
+/* The card's contents, shared by both layouts. `fill` is true only in the
+   desktop sticky stack, where the card is pinned to a fixed 92vh box and the
+   image has to flex into the leftover room; in the stacked list the card
+   grows to fit instead. */
+const CardBody = ({ project, index, total, fill }) => {
   const accent = accentFor(project.category);
-
-  const { scrollYProgress } = useScroll({
-    target: cardRef,
-    offset: ['start end', 'start start'],
-  });
-
-  const scale = useTransform(scrollYProgress, [0, 0.85], [1, 0.93]);
-
   return (
-    <div
-      ref={cardRef}
-      className="sticky w-full"
-      style={{ top: `${TOP_OFFSET + index * 16}px`, height: CARD_HEIGHT }}
-    >
-      <motion.article
-        style={{ scale, '--accent-shadow': accent.shadow }}
-        className="group/card relative origin-top w-full h-full flex flex-col gap-5 md:gap-6 rounded-[32px] md:rounded-[40px] border-4 border-ink bg-cream shadow-[8px_8px_0_0_var(--accent-shadow)] hover:shadow-[12px_12px_0_0_var(--accent-shadow)] hover:-translate-y-2 p-6 sm:p-7 md:p-10 transition-all duration-500 backdrop-blur-sm"
-      >
+      <>
         {/* Scroll progress dots (desktop) */}
-        <div className="hidden lg:flex absolute -left-10 top-1/2 -translate-y-1/2 flex-col gap-2.5" aria-hidden="true">
+        <div className={`${fill ? 'hidden lg:flex' : 'hidden'} absolute -left-10 top-1/2 -translate-y-1/2 flex-col gap-2.5`} aria-hidden="true">
           {Array.from({ length: total }).map((_, i) => (
             <span
               key={i}
@@ -177,25 +165,71 @@ const ProjectCard = ({ project, index, total }) => {
 
         {/* Image — enhanced with smooth hover and better styling */}
         {project.image ? (
-          <div className="group/image w-full flex-1 min-h-0 flex items-start justify-center overflow-hidden rounded-[20px] md:rounded-[28px] bg-ink/5 backdrop-blur-sm">
+          <div className={`group/image w-full flex items-start justify-center overflow-hidden rounded-[20px] md:rounded-[28px] bg-ink/5 ${fill ? 'flex-1 min-h-0' : ''}`}>
             <img
               src={`${import.meta.env.BASE_URL}${project.image.startsWith('/') ? project.image.slice(1) : project.image}`}
               alt={project.title}
+              loading="lazy"
+              decoding="async"
               className="max-w-full max-h-full w-auto h-auto block border-4 border-ink rounded-[16px] md:rounded-[24px] transition-all duration-700 group-hover/image:scale-110 group-hover/image:drop-shadow-lg"
             />
           </div>
         ) : (
-          <div className="w-full flex-1 min-h-0 rounded-[20px] md:rounded-[28px] bg-gradient-to-br from-cream-alt to-cream border-4 border-dashed border-ink/20 flex items-center justify-center">
+          <div className={`w-full rounded-[20px] md:rounded-[28px] bg-gradient-to-br from-cream-alt to-cream border-4 border-dashed border-ink/20 flex items-center justify-center ${fill ? 'flex-1 min-h-0' : 'min-h-[160px]'}`}>
             <span className="font-mono-display text-ink/30 font-bold text-xs tracking-widest uppercase">No Preview</span>
           </div>
         )}
+      </>
+  );
+};
+
+/* Desktop: cards pin and shrink slightly as the next one rides over them. */
+const StickyProjectCard = ({ project, index, total }) => {
+  const cardRef = useRef(null);
+  const accent = accentFor(project.category);
+
+  const { scrollYProgress } = useScroll({
+    target: cardRef,
+    offset: ['start end', 'start start'],
+  });
+  const scale = useTransform(scrollYProgress, [0, 0.85], [1, 0.93]);
+
+  return (
+    <div
+      ref={cardRef}
+      className="sticky w-full"
+      style={{ top: `${TOP_OFFSET + index * 16}px`, height: CARD_HEIGHT }}
+    >
+      <motion.article
+        style={{ scale, '--accent-shadow': accent.shadow }}
+        /* transition-all fought the motion-driven transform; limit it to the
+           properties that actually animate on hover. backdrop-blur was pure
+           GPU cost here - the card background is fully opaque. */
+        className="group/card relative origin-top w-full h-full flex flex-col gap-5 md:gap-6 rounded-[32px] md:rounded-[40px] border-4 border-ink bg-cream shadow-[8px_8px_0_0_var(--accent-shadow)] hover:shadow-[12px_12px_0_0_var(--accent-shadow)] p-6 sm:p-7 md:p-10 transition-[box-shadow] duration-500"
+      >
+        <CardBody project={project} index={index} total={total} fill />
       </motion.article>
     </div>
   );
 };
 
+/* Mobile & tablet: a plain list. No sticky box, no per-card scroll listener,
+   and the card is free to size to its own content. */
+const PlainProjectCard = ({ project, index, total }) => {
+  const accent = accentFor(project.category);
+  return (
+    <article
+      style={{ '--accent-shadow': accent.shadow }}
+      className="group/card relative w-full flex flex-col gap-5 rounded-[28px] border-4 border-ink bg-cream shadow-[6px_6px_0_0_var(--accent-shadow)] p-5 sm:p-7"
+    >
+      <CardBody project={project} index={index} total={total} fill={false} />
+    </article>
+  );
+};
+
 const ProjectsSection = () => {
   const [ref, visible] = useVisible();
+  const stacked = useMediaQuery('(min-width: 1024px)');
 
   return (
     <section id="projects" ref={ref} className="bg-cream px-4 sm:px-6 md:px-10 py-14 md:py-20 text-ink">
@@ -208,15 +242,26 @@ const ProjectsSection = () => {
         </h2>
       </div>
 
-      {/* Scroll budget: each card needs ~100vh of scroll space to be fully seen before the next takes over */}
-      <div
-        className="mx-auto max-w-5xl relative"
-        style={{ height: `${projects.length * 100}vh` }}
-      >
-        {projects.map((project, index) => (
-          <ProjectCard key={project.id} project={project} index={index} total={projects.length} />
-        ))}
-      </div>
+      {/* The sticky stack needs ~100vh of scroll budget per card. That is
+          600vh of scrolling and six scroll-linked cards, which is both a lot
+          of thumb-work and a lot of main-thread work on a phone - so below lg
+          the same cards render as an ordinary list. */}
+      {stacked ? (
+        <div
+          className="mx-auto max-w-5xl relative"
+          style={{ height: `${projects.length * 100}vh` }}
+        >
+          {projects.map((project, index) => (
+            <StickyProjectCard key={project.id} project={project} index={index} total={projects.length} />
+          ))}
+        </div>
+      ) : (
+        <div className="mx-auto max-w-5xl flex flex-col gap-6">
+          {projects.map((project, index) => (
+            <PlainProjectCard key={project.id} project={project} index={index} total={projects.length} />
+          ))}
+        </div>
+      )}
 
       <div className="flex justify-center mt-16 relative z-10">
         <a
@@ -231,11 +276,6 @@ const ProjectsSection = () => {
       </div>
 
       <style>{`
-        @keyframes marquee {
-          0%   { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-        .animate-marquee { animation: marquee 30s linear infinite; }
       `}</style>
     </section>
   );
