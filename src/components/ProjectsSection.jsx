@@ -165,13 +165,13 @@ const CardBody = ({ project, index, total, fill }) => {
 
         {/* Image — enhanced with smooth hover and better styling */}
         {project.image ? (
-          <div className={`group/image w-full flex items-start justify-center overflow-hidden rounded-[20px] md:rounded-[28px] bg-ink/5 ${fill ? 'flex-1 min-h-0' : ''}`}>
+          <div className={`group/image w-full flex items-start justify-center overflow-hidden rounded-[20px] md:rounded-[28px] ${fill ? 'flex-1 min-h-0' : ''}`}>
             <img
               src={`${import.meta.env.BASE_URL}${project.image.startsWith('/') ? project.image.slice(1) : project.image}`}
               alt={project.title}
               loading="lazy"
               decoding="async"
-              className="max-w-full max-h-full w-auto h-auto block border-4 border-ink rounded-[16px] md:rounded-[24px] transition-all duration-700 group-hover/image:scale-110 group-hover/image:drop-shadow-lg"
+              className="max-w-full max-h-full w-auto h-auto block border-4 border-ink rounded-[16px] md:rounded-[24px] transition-all duration-700 group-hover/image:scale-110"
             />
           </div>
         ) : (
