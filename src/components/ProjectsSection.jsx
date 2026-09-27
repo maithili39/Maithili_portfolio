@@ -23,8 +23,8 @@ const projects = [
     highlight: '26,058-record ingredient knowledge base',
     description: 'An AI skincare analysis platform supporting OCR label scanning, barcode lookup, and manual ingredient entry for personalized cosmetic safety assessment. Backed by an ingredient knowledge base of 26,058 records (25,775 EU CosIng entries, 283 safety profiles) driving automated risk classification, containerized with Docker for reproducible deployment.',
     techStack: ['Python', 'FastAPI', 'PostgreSQL', 'OpenCV', 'Tailwind CSS'],
-    liveUrl: 'https://skin-guard-nu.vercel.app/',
-    codeUrl: 'https://github.com/maithili39/SkinGuard',
+    liveUrl: 'https://skinguardweb-ga82.vercel.app/',
+    codeUrl: 'https://github.com/maithili39/skinguardweb',
     image: '/images/sguard.png',
   },
   {
